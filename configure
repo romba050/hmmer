@@ -5455,17 +5455,7 @@ $as_echo_n "checking whether $CC can compile our SSE code... " >&6; }
     cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
-#include <xmmintrin.h>
-#include <x86intrin.h>
-#include <stdint.h>
-int stub_sse(void) {
-__m128i v1 = _mm_set1_epi32(42);
-__m128i v2 = _mm_set1_epi32(86);
-union { __m128i v; int32_t x[4]; } v3;
-v3.v = _mm_add_epi32(v1, v2);
-return (int) v3.x[0];
-}
-int main(void) { if (stub_sse() != 128) return 1; else return 0; }
+int main(void) { return 0; }
 
 _ACEOF
 if ac_fn_c_try_link "$LINENO"; then :
