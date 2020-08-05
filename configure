@@ -2563,14 +2563,14 @@ fi
 if test "${enable_sse+set}" = set; then :
   enableval=$enable_sse; enable_sse=$enableval
 else
-  enable_sse=check
+  enable_sse=no
 fi
 
 # Check whether --enable-vmx was given.
 if test "${enable_vmx+set}" = set; then :
   enableval=$enable_vmx; enable_vmx=$enableval
 else
-  enable_vmx=check
+  enable_vmx=no
 fi
 
 
@@ -4354,6 +4354,7 @@ elif test "$enable_debugging" != "no"; then
 elif test "$esl_cflags_env_set" != "yes"; then
    CFLAGS="-O3"
 fi
+CFLAGS+=" -msse"
 
 
 # PIC (position-independent code) for shared library support
@@ -5442,7 +5443,7 @@ $as_echo_n "checking whether $CC can compile our SSE code... " >&6; }
   if test "x$SSE_CFLAGS" != x; then
     esl_sse_try_flags=$SSE_CFLAGS
   else
-    esl_sse_try_flags="none -msse"
+    esl_sse_try_flags="none -msse2"
   fi
 
   save_CFLAGS=$CFLAGS
@@ -5455,7 +5456,16 @@ $as_echo_n "checking whether $CC can compile our SSE code... " >&6; }
     cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
-int main(void) { return 0; }
+#include <x86intrin.h>
+#include <stdint.h>
+int stub_sse(void) {
+__m128i v1 = _mm_set1_epi32(42);
+__m128i v2 = _mm_set1_epi32(86);
+union { __m128i v; int32_t x[4]; } v3;
+v3.v = _mm_add_epi32(v1, v2);
+return (int) v3.x[0];
+}
+int main(void) { if (stub_sse() != 128) return 1; else return 0; }
 
 _ACEOF
 if ac_fn_c_try_link "$LINENO"; then :
@@ -5507,6 +5517,20 @@ fi
 
 fi
 
+# since we hardcoded enable_sse=no to avoid doing the test, but we need eslENABLE_SSE to be enabled for hmmer.h, we force the execution of the above code block
+
+
+$as_echo "#define eslENABLE_SSE 1" >>confdefs.h
+
+HMMERIMPLLIB="impl_sse/libhmmerimpl.a"
+
+SSE_CFLAGS=$esl_sse_cflags
+
+enable_sse=yes
+impl_choice=sse
+
+
+impl_choice=sse
 # If we didn't choose an implementation, die.
 case "$impl_choice" in
 sse)  { $as_echo "$as_me:${as_lineno-$LINENO}: Activating Intel/AMD SSE vector DP implementation" >&5
