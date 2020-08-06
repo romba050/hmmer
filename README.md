@@ -8,6 +8,7 @@ run:
 
 '''
 autconf
+
 docker run -v $PWD/build.sh:/build.sh -v $PWD:/input -v $PWD/output:/output biolib/c-wasm
 '''
 
