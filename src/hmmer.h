@@ -821,7 +821,7 @@ typedef struct p7_hmm_window_list_s {
 /*****************************************************************
  * 14. Choice of vector implementation.
  *****************************************************************/
-// int eslENABLE_SSE = 1;
+#define eslENABLE_SSE 1
 
 #if defined (eslENABLE_SSE)
 #include "impl_sse/impl_sse.h"
