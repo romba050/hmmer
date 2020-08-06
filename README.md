@@ -5,12 +5,10 @@ hmmer needs vectorization enabled with a protocoll called SSE and that one is on
 https://emscripten.org/docs/porting/simd.html#compiling-simd-code-targeting-x86-sse-instruction-set
 
 run:
-
-'''
+```
 autconf
-
 docker run -v $PWD/build.sh:/build.sh -v $PWD:/input -v $PWD/output:/output biolib/c-wasm
-'''
+```
 
 ## HMMER - biological sequence analysis using profile HMMs
 
