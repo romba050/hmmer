@@ -194,8 +194,8 @@ esac
 AC_ARG_ENABLE(gcov,    [AS_HELP_STRING([--enable-gcov],    [compile for code coverage testing])],        enable_gcov=$enableval,    enable_gcov=no)
 AC_ARG_ENABLE(gprof,   [AS_HELP_STRING([--enable-gprof],   [compile for gcc code profiling])],           enable_gprof=$enableval,   enable_gprof=no)
 
-AC_ARG_ENABLE(sse,     [AS_HELP_STRING([--enable-sse],     [enable our SSE vector code])],               enable_sse=$enableval,     enable_sse=check)
-AC_ARG_ENABLE(vmx,     [AS_HELP_STRING([--enable-vmx],     [enable our Altivec/VMX vector code])],       enable_vmx=$enableval,     enable_vmx=check)
+AC_ARG_ENABLE(sse,     [AS_HELP_STRING([--enable-sse],     [enable our SSE vector code])],               enable_sse=$enableval,     enable_sse=no)
+AC_ARG_ENABLE(vmx,     [AS_HELP_STRING([--enable-vmx],     [enable our Altivec/VMX vector code])],       enable_vmx=$enableval,     enable_vmx=no)
 
 AC_ARG_ENABLE(threads, [AS_HELP_STRING([--enable-threads], [enable POSIX threads parallelization])],     enable_threads=$enableval, enable_threads=check)
 AC_ARG_ENABLE(mpi,     [AS_HELP_STRING([--enable-mpi],     [enable MPI parallelization])],               enable_mpi=$enableval,     enable_mpi=no)
@@ -262,6 +262,7 @@ elif test "$enable_debugging" != "no"; then
 elif test "$esl_cflags_env_set" != "yes"; then
    CFLAGS="-O3"
 fi
+CFLAGS+=" -msse"
 
 
 # PIC (position-independent code) for shared library support
@@ -340,6 +341,17 @@ if test "$enable_sse" = "yes" || test "$enable_sse" = "check"; then
     ])
 fi
 
+# since we hardcoded enable_sse=no to avoid doing the test, but we need eslENABLE_SSE to be enabled for hmmer.h, we force the execution of the above code block
+
+# AC_DEFINE(eslENABLE_SSE, 1, [Enable SSE vector implementation])
+# AC_SUBST([HMMERIMPLLIB], ["impl_sse/libhmmerimpl.a"])
+# SSE_CFLAGS=$esl_sse_cflags
+# AC_SUBST(SSE_CFLAGS)
+# enable_sse=yes
+# impl_choice=sse
+
+
+impl_choice=sse
 # If we didn't choose an implementation, die.
 case "$impl_choice" in 
 sse)  AC_MSG_NOTICE([Activating Intel/AMD SSE vector DP implementation]) 

@@ -2563,14 +2563,14 @@ fi
 if test "${enable_sse+set}" = set; then :
   enableval=$enable_sse; enable_sse=$enableval
 else
-  enable_sse=check
+  enable_sse=no
 fi
 
 # Check whether --enable-vmx was given.
 if test "${enable_vmx+set}" = set; then :
   enableval=$enable_vmx; enable_vmx=$enableval
 else
-  enable_vmx=check
+  enable_vmx=no
 fi
 
 
@@ -4354,6 +4354,7 @@ elif test "$enable_debugging" != "no"; then
 elif test "$esl_cflags_env_set" != "yes"; then
    CFLAGS="-O3"
 fi
+CFLAGS+=" -msse"
 
 
 # PIC (position-independent code) for shared library support
@@ -5516,6 +5517,17 @@ fi
 
 fi
 
+# since we hardcoded enable_sse=no to avoid doing the test, but we need eslENABLE_SSE to be enabled for hmmer.h, we force the execution of the above code block
+
+# AC_DEFINE(eslENABLE_SSE, 1, [Enable SSE vector implementation])
+# AC_SUBST([HMMERIMPLLIB], ["impl_sse/libhmmerimpl.a"])
+# SSE_CFLAGS=$esl_sse_cflags
+# AC_SUBST(SSE_CFLAGS)
+# enable_sse=yes
+# impl_choice=sse
+
+
+impl_choice=sse
 # If we didn't choose an implementation, die.
 case "$impl_choice" in
 sse)  { $as_echo "$as_me:${as_lineno-$LINENO}: Activating Intel/AMD SSE vector DP implementation" >&5
