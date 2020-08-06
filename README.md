@@ -1,3 +1,16 @@
+## Comments Basile
+After some more debugging of hmmer and hardcoding (i.e. setting vectorization variables like eslENABLE_SSE to true. etc) some of the configure.ac as well as hmmer.h I ran into a wall where an emscripten file ( mmintrin.h ) has a type conversion error.
+
+hmmer needs vectorization enabled with a protocoll called SSE and that one is only experimentally supported by emscripten and it’s really hard to get it to work.  -> Get simpler binf project using vecorization to work before tackling hmmer, which is quite complex (also because it depends on easel).
+https://emscripten.org/docs/porting/simd.html#compiling-simd-code-targeting-x86-sse-instruction-set
+
+run:
+
+'''
+autconf
+docker run -v $PWD/build.sh:/build.sh -v $PWD:/input -v $PWD/output:/output biolib/c-wasm
+'''
+
 ## HMMER - biological sequence analysis using profile HMMs
 
 [![](https://travis-ci.org/EddyRivasLab/hmmer.svg?branch=develop)](https://travis-ci.org/EddyRivasLab/hmmer)
